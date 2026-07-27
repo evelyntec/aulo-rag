@@ -180,12 +180,10 @@ def formatear_fuente(c: dict) -> str:
 _MODELO_DETECTADO = None
 
 
-def elegir_modelo(cliente) -> str:
-    """Consulta a la API qué modelos Flash están disponibles para esta cuenta y elige el mejor.
-    Evita errores 404 cuando Google retira o renombra modelos."""
-    global _MODELO_DETECTADO
-    if _MODELO_DETECTADO:
-        return _MODELO_DETECTADO
+def listar_candidatos(cliente) -> list:
+    """Consulta a la API qué modelos Flash existen para esta cuenta y los ordena:
+    primero las versiones numeradas más nuevas (gemini-3.x, gemini-2.x), después el resto."""
+    import re
     candidatos = []
     for m in cliente.models.list():
         nombre = (m.name or "").replace("models/", "")
@@ -200,9 +198,9 @@ def elegir_modelo(cliente) -> str:
         candidatos.append(nombre)
     if not candidatos:
         raise RuntimeError("No se encontró ningún modelo Gemini Flash disponible para esta API key.")
-    # orden descendente: la versión más nueva primero
-    _MODELO_DETECTADO = sorted(candidatos, reverse=True)[0]
-    return _MODELO_DETECTADO
+    numerados = sorted([c for c in candidatos if re.match(r"^gemini-\d", c)], reverse=True)
+    otros = sorted([c for c in candidatos if not re.match(r"^gemini-\d", c)], reverse=True)
+    return numerados + otros
 
 
 def responder(cliente, indice, chunks, pregunta: str) -> dict:
@@ -213,9 +211,26 @@ def responder(cliente, indice, chunks, pregunta: str) -> dict:
         for i, c in enumerate(recuperados)
     )
     prompt = f"CONTEXTO:\n{contexto}\n\nPREGUNTA DEL ESTUDIANTE:\n{pregunta}"
-    respuesta = cliente.models.generate_content(
-        model=elegir_modelo(cliente),
-        contents=prompt,
-        config=types.GenerateContentConfig(system_instruction=PROMPT_SISTEMA, temperature=0.1),
+    global _MODELO_DETECTADO
+    candidatos = [_MODELO_DETECTADO] if _MODELO_DETECTADO else listar_candidatos(cliente)
+    ultimo_error = None
+    for modelo in candidatos:
+        try:
+            respuesta = cliente.models.generate_content(
+                model=modelo,
+                contents=prompt,
+                config=types.GenerateContentConfig(system_instruction=PROMPT_SISTEMA, temperature=0.1),
+            )
+            _MODELO_DETECTADO = modelo  # recordar el modelo que sí funcionó
+            return {"respuesta": respuesta.text, "fuentes": recuperados}
+        except Exception as e:
+            mensaje = str(e)
+            # si el modelo no existe o no tiene cuota gratuita, probamos el siguiente
+            if any(x in mensaje for x in ["404", "NOT_FOUND", "429", "RESOURCE_EXHAUSTED", "limit: 0"]):
+                ultimo_error = e
+                continue
+            raise
+    raise RuntimeError(
+        "Ningún modelo respondió (puede ser un límite temporal de cuota; espera 1 minuto y reintenta). "
+        f"Último error: {ultimo_error}"
     )
-    return {"respuesta": respuesta.text, "fuentes": recuperados}
