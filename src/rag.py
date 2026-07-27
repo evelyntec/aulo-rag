@@ -12,7 +12,7 @@ from google import genai
 from google.genai import types
 
 # --- Configuración central ---
-MODELO_CHAT = "gemini-2.5-flash"
+MODELO_CHAT = "gemini-3-flash"
 MODELO_EMBEDDINGS = "gemini-embedding-001"
 DIMENSION = 768          # dimensión reducida: más liviana y suficiente para este caso
 TAM_CHUNK = 1100         # caracteres por chunk
