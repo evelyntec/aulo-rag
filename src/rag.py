@@ -12,7 +12,7 @@ from google import genai
 from google.genai import types
 
 # --- Configuración central ---
-MODELO_CHAT = "gemini-3-flash"
+MODELO_CHAT = "detección automática (Gemini Flash)"
 MODELO_EMBEDDINGS = "gemini-embedding-001"
 DIMENSION = 768          # dimensión reducida: más liviana y suficiente para este caso
 TAM_CHUNK = 1100         # caracteres por chunk
@@ -177,6 +177,34 @@ def formatear_fuente(c: dict) -> str:
     return c["fuente"]
 
 
+_MODELO_DETECTADO = None
+
+
+def elegir_modelo(cliente) -> str:
+    """Consulta a la API qué modelos Flash están disponibles para esta cuenta y elige el mejor.
+    Evita errores 404 cuando Google retira o renombra modelos."""
+    global _MODELO_DETECTADO
+    if _MODELO_DETECTADO:
+        return _MODELO_DETECTADO
+    candidatos = []
+    for m in cliente.models.list():
+        nombre = (m.name or "").replace("models/", "")
+        acciones = m.supported_actions or []
+        if "generateContent" not in acciones:
+            continue
+        if "flash" not in nombre:
+            continue
+        # descarta variantes especializadas (imagen, audio, etc.)
+        if any(x in nombre for x in ["image", "live", "tts", "audio", "thinking", "8b", "exp"]):
+            continue
+        candidatos.append(nombre)
+    if not candidatos:
+        raise RuntimeError("No se encontró ningún modelo Gemini Flash disponible para esta API key.")
+    # orden descendente: la versión más nueva primero
+    _MODELO_DETECTADO = sorted(candidatos, reverse=True)[0]
+    return _MODELO_DETECTADO
+
+
 def responder(cliente, indice, chunks, pregunta: str) -> dict:
     """Pipeline completo: busca contexto y genera la respuesta con cita de fuentes."""
     recuperados = buscar(cliente, indice, chunks, pregunta)
@@ -186,7 +214,7 @@ def responder(cliente, indice, chunks, pregunta: str) -> dict:
     )
     prompt = f"CONTEXTO:\n{contexto}\n\nPREGUNTA DEL ESTUDIANTE:\n{pregunta}"
     respuesta = cliente.models.generate_content(
-        model=MODELO_CHAT,
+        model=elegir_modelo(cliente),
         contents=prompt,
         config=types.GenerateContentConfig(system_instruction=PROMPT_SISTEMA, temperature=0.1),
     )
