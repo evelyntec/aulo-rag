@@ -1,0 +1,14 @@
+# Entorno y secretos
+.venv/
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# NOTA: /documentos, /indice y resultados_evaluacion.md SÍ se versionan (son parte de la entrega)
