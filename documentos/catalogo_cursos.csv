@@ -1,0 +1,26 @@
+codigo,nombre_curso,categoria,nivel,duracion_horas,precio_usd,modalidad,cupos_disponibles,fecha_inicio,docente,certificacion
+AA-101,Python desde Cero,Programación,Básico,40,49,Online en vivo,35,2026-08-10,Carla Mendoza,Si
+AA-102,JavaScript Moderno,Programación,Básico,40,49,Online en vivo,28,2026-08-17,Diego Fuentes,Si
+AA-103,Java y Programación Orientada a Objetos,Programación,Intermedio,60,79,Online en vivo,22,2026-09-01,Diego Fuentes,Si
+AA-104,Desarrollo Web con HTML y CSS,Programación,Básico,30,39,A tu ritmo,100,2026-08-03,Valentina Ríos,Si
+AA-105,React y Aplicaciones Frontend,Programación,Intermedio,50,89,Online en vivo,18,2026-09-07,Valentina Ríos,Si
+AA-106,APIs REST con FastAPI,Programación,Intermedio,45,89,Online en vivo,25,2026-09-14,Carla Mendoza,Si
+AA-107,Git y GitHub Profesional,Programación,Básico,20,29,A tu ritmo,100,2026-08-03,Tomás Herrera,No
+AA-108,Testing Automatizado en Python,Programación,Avanzado,40,99,Online en vivo,15,2026-10-05,Carla Mendoza,Si
+AA-201,Análisis de Datos con Excel,Datos,Básico,30,39,A tu ritmo,100,2026-08-03,Lucía Paredes,Si
+AA-202,SQL para Análisis de Datos,Datos,Básico,35,49,Online en vivo,30,2026-08-24,Lucía Paredes,Si
+AA-203,Python para Ciencia de Datos,Datos,Intermedio,60,99,Online en vivo,20,2026-09-07,Andrés Soto,Si
+AA-204,Visualización con Power BI,Datos,Intermedio,40,79,Online en vivo,24,2026-09-14,Lucía Paredes,Si
+AA-205,Machine Learning Aplicado,Datos,Avanzado,80,149,Online en vivo,12,2026-10-05,Andrés Soto,Si
+AA-206,Estadística para Datos,Datos,Intermedio,45,69,A tu ritmo,100,2026-08-03,Andrés Soto,Si
+AA-301,Diseño UX/UI desde Cero,Diseño,Básico,40,59,Online en vivo,26,2026-08-17,Paula Vidal,Si
+AA-302,Figma Profesional,Diseño,Intermedio,30,49,A tu ritmo,100,2026-08-03,Paula Vidal,Si
+AA-303,Ilustración Digital,Diseño,Básico,35,49,A tu ritmo,100,2026-08-03,Marco Silva,No
+AA-304,Diseño de Marca e Identidad,Diseño,Intermedio,40,69,Online en vivo,20,2026-09-21,Marco Silva,Si
+AA-401,Marketing Digital Integral,Marketing,Básico,45,59,Online en vivo,32,2026-08-24,Fernanda Cruz,Si
+AA-402,SEO y Posicionamiento Web,Marketing,Intermedio,30,59,A tu ritmo,100,2026-08-03,Fernanda Cruz,Si
+AA-403,Publicidad en Redes Sociales,Marketing,Intermedio,35,69,Online en vivo,27,2026-09-01,Javier Morales,Si
+AA-404,Email Marketing y Automatización,Marketing,Básico,25,39,A tu ritmo,100,2026-08-03,Javier Morales,No
+AA-501,Gestión de Proyectos con Metodologías Ágiles,Negocios,Intermedio,40,79,Online en vivo,25,2026-09-07,Rocío Navarro,Si
+AA-502,Finanzas para Emprendedores,Negocios,Básico,30,49,Online en vivo,30,2026-08-31,Rocío Navarro,Si
+AA-503,Excel Financiero Avanzado,Negocios,Avanzado,40,99,Online en vivo,16,2026-10-12,Rocío Navarro,Si
